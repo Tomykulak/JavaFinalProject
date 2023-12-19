@@ -12,6 +12,7 @@ public class SnakeGame extends JPanel implements ActionListener {
     private final int[] y = new int[ALL_DOTS];
     private int bodyParts;
     private int applesEaten;
+    private int highestScore = 0; // New variable to store the highest score
     private int appleX;
     private int appleY;
     private char direction = 'R';
@@ -137,6 +138,15 @@ public class SnakeGame extends JPanel implements ActionListener {
 
                 g2d.setTransform(old);
             }
+
+
+            g.setColor(Color.white);
+            g.setFont(new Font("Ink Free", Font.BOLD, 30));
+            // Draw the highest score
+            g.drawString("High Score: " + highestScore, 10, 30);
+            // Draw the current score
+            g.drawString("Score: " + applesEaten, 10, 60);
+
         } else {
             gameOver(g);
         }
@@ -176,6 +186,9 @@ public class SnakeGame extends JPanel implements ActionListener {
         if ((x[0] == appleX) && (y[0] == appleY)) {
             bodyParts++;
             applesEaten++;
+            if (applesEaten > highestScore) {
+                highestScore = applesEaten; // Update the highest score if current score is greater
+            }
             spawnApple();
         }
     }
@@ -199,18 +212,29 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
 
     public void gameOver(Graphics g) {
+        // "Game Over" text setup
         g.setColor(Color.green);
         g.setFont(new Font("Ink Free", Font.BOLD, 40));
-        FontMetrics metrics = getFontMetrics(g.getFont());
+        FontMetrics metrics40 = getFontMetrics(g.getFont());
         String gameOverText = "Game Over";
-        int xText = (SIZE - metrics.stringWidth(gameOverText)) / 2;
-        int yText = SIZE / 2;
-        g.drawString(gameOverText, xText, yText);
+        int xGameOverText = (SIZE - metrics40.stringWidth(gameOverText)) / 2;
+        int yGameOverText = SIZE / 2 - 50; // Positioned slightly above the middle
+        g.drawString(gameOverText, xGameOverText, yGameOverText);
 
+        // Display the final score
+        g.setColor(Color.red);
+        g.setFont(new Font("Ink Free", Font.BOLD, 30));
+        FontMetrics metrics30 = getFontMetrics(g.getFont());
+        String scoreText = "Score: " + applesEaten;
+        int xScoreText = (SIZE - metrics30.stringWidth(scoreText)) / 2;
+        int yScoreText = SIZE / 2 + 20; // Positioned in the middle
+        g.drawString(scoreText, xScoreText, yScoreText);
+
+        // Positioning the restart button
         int buttonWidth = 100;
         int buttonHeight = 30;
         int xButton = (SIZE - buttonWidth) / 2;
-        int yButton = yText + metrics.getHeight();
+        int yButton = SIZE / 2 + 70; // Positioned below the score
         restartButton.setBounds(xButton, yButton, buttonWidth, buttonHeight);
         restartButton.setVisible(true);
     }
