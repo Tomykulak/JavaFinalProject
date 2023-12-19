@@ -22,6 +22,8 @@ public class SnakeGame extends JPanel implements ActionListener {
 
     private Image appleImage;
     private Image snakeHeadImage;
+    private Image snakeBodyImage;
+    private Image snakeTailImage;
 
     public SnakeGame() {
         random = new Random();
@@ -30,14 +32,18 @@ public class SnakeGame extends JPanel implements ActionListener {
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
 
-        //images
         ImageIcon iid = new ImageIcon("images/apple.png");
         appleImage = iid.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
 
         ImageIcon iis = new ImageIcon("images/snakeHead.png");
         snakeHeadImage = iis.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
 
-        // Initialize and set up the restart button
+        ImageIcon iib = new ImageIcon("images/snakeBody.png");
+        snakeBodyImage = iib.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
+
+        ImageIcon iit = new ImageIcon("images/snakeTail.png");
+        snakeTailImage = iit.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
+
         restartButton = new JButton("Restart");
         restartButton.setBounds(SIZE / 2 - 50, SIZE / 2, 100, 30);
         restartButton.addActionListener(new ActionListener() {
@@ -56,21 +62,21 @@ public class SnakeGame extends JPanel implements ActionListener {
     public void startGame() {
         bodyParts = 3;
         for (int i = 0; i < bodyParts; i++) {
-            x[i] = 48 - i * DOT_SIZE; // Reset snake's position
+            x[i] = 48 - i * DOT_SIZE;
             y[i] = 48;
         }
         applesEaten = 0;
-        direction = 'R'; // Reset snake's direction
-        running = true; // Make sure the game is set to running
-        spawnApple(); // Spawn a new apple
+        direction = 'R';
+        running = true;
+        spawnApple();
 
         if (timer != null) {
             timer.stop();
         }
-        timer = new Timer(150, this); // Reset the timer
+        timer = new Timer(150, this);
         timer.start();
 
-        restartButton.setVisible(false); // Hide the restart button
+        restartButton.setVisible(false);
     }
 
     public void spawnApple() {
@@ -90,35 +96,53 @@ public class SnakeGame extends JPanel implements ActionListener {
             g.drawImage(appleImage, appleX, appleY, this);
 
             for (int i = 0; i < bodyParts; i++) {
+                double rotationAngle = 0;
+                if (i < bodyParts - 1) {
+                    rotationAngle = calculateRotationAngle(x[i], y[i], x[i + 1], y[i + 1], false);
+                }
+
+                AffineTransform old = g2d.getTransform();
+                AffineTransform transform = new AffineTransform();
+                transform.rotate(rotationAngle, x[i] + DOT_SIZE / 2.0, y[i] + DOT_SIZE / 2.0);
+                g2d.setTransform(transform);
+
                 if (i == 0) {
-                    // Calculate the rotation angle based on the direction
-                    double rotationAngle = 0;
+                    double headRotationAngle = 0;
                     switch (direction) {
-                        case 'U': rotationAngle = Math.toRadians(-90); break;
-                        case 'D': rotationAngle = Math.toRadians(90); break;
-                        case 'L': rotationAngle = Math.toRadians(180); break;
-                        case 'R': // No rotation needed
+                        case 'U': headRotationAngle = Math.toRadians(-90); break;
+                        case 'D': headRotationAngle = Math.toRadians(90); break;
+                        case 'L': headRotationAngle = Math.toRadians(180); break;
                     }
 
-                    // Apply rotation
-                    AffineTransform old = g2d.getTransform();
-                    AffineTransform transform = new AffineTransform();
-                    transform.rotate(rotationAngle, x[i] + DOT_SIZE / 2.0, y[i] + DOT_SIZE / 2.0);
-                    g2d.setTransform(transform);
+                    AffineTransform headTransform = new AffineTransform();
+                    headTransform.rotate(headRotationAngle, x[i] + DOT_SIZE / 2.0, y[i] + DOT_SIZE / 2.0);
+                    g2d.setTransform(headTransform);
 
-                    // Draw the snake head
                     g2d.drawImage(snakeHeadImage, x[i], y[i], this);
+                } else if (i == bodyParts - 1) {
+                    double tailRotationAngle = calculateRotationAngle(x[i - 1], y[i - 1], x[i], y[i], true);
+                    AffineTransform tailTransform = new AffineTransform();
+                    tailTransform.rotate(tailRotationAngle, x[i] + DOT_SIZE / 2.0, y[i] + DOT_SIZE / 2.0);
+                    g2d.setTransform(tailTransform);
 
-                    // Reset the transformation
-                    g2d.setTransform(old);
+                    g2d.drawImage(snakeTailImage, x[i], y[i], this);
                 } else {
-                    g.setColor(new Color(45, 180, 0));
-                    g.fillRect(x[i], y[i], DOT_SIZE, DOT_SIZE);
+                    g2d.drawImage(snakeBodyImage, x[i], y[i], this);
                 }
+
+                g2d.setTransform(old);
             }
         } else {
             gameOver(g);
         }
+    }
+
+    private double calculateRotationAngle(int x1, int y1, int x2, int y2, boolean isTail) {
+        double angle = Math.atan2(y2 - y1, x2 - x1);
+        if (isTail) {
+            angle += Math.PI;
+        }
+        return angle;
     }
 
     public void move() {
@@ -144,14 +168,14 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
 
     public void checkApple() {
-        if ((Math.abs(x[0] - appleX) < DOT_SIZE) && (Math.abs(y[0] - appleY) < DOT_SIZE)) {
+        if ((x[0] == appleX) && (y[0] == appleY)) {
             bodyParts++;
             applesEaten++;
             spawnApple();
         }
     }
+
     public void checkCollisions() {
-        // Check for collision with body
         for (int i = bodyParts - 1; i > 0; i--) {
             if ((x[0] == x[i]) && (y[0] == y[i])) {
                 running = false;
@@ -159,18 +183,15 @@ public class SnakeGame extends JPanel implements ActionListener {
             }
         }
 
-        // Check for collision with walls
         if (x[0] < 0 || x[0] >= SIZE || y[0] < 0 || y[0] >= SIZE) {
             running = false;
         }
 
-        // Stop the timer if the game is no longer running
         if (!running) {
             timer.stop();
             restartButton.setVisible(true);
         }
     }
-
 
     public void gameOver(Graphics g) {
         g.setColor(Color.green);
@@ -181,11 +202,10 @@ public class SnakeGame extends JPanel implements ActionListener {
         int yText = SIZE / 2;
         g.drawString(gameOverText, xText, yText);
 
-        // Position and show the restart button
         int buttonWidth = 100;
         int buttonHeight = 30;
         int xButton = (SIZE - buttonWidth) / 2;
-        int yButton = yText + metrics.getHeight(); // position it below the text
+        int yButton = yText + metrics.getHeight();
         restartButton.setBounds(xButton, yButton, buttonWidth, buttonHeight);
         restartButton.setVisible(true);
     }
