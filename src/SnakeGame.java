@@ -24,6 +24,7 @@ public class SnakeGame extends JPanel implements ActionListener {
     private Image snakeHeadImage;
     private Image snakeBodyImage;
     private Image snakeTailImage;
+    private Image backgroundImage;
 
     public SnakeGame() {
         random = new Random();
@@ -43,6 +44,9 @@ public class SnakeGame extends JPanel implements ActionListener {
 
         ImageIcon iit = new ImageIcon("images/snakeTail.png");
         snakeTailImage = iit.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
+
+        ImageIcon ibg = new ImageIcon("images/sforestBackground.jpg");
+        backgroundImage = ibg.getImage().getScaledInstance(SIZE, SIZE, Image.SCALE_SMOOTH);
 
         restartButton = new JButton("Restart");
         restartButton.setBounds(SIZE / 2 - 50, SIZE / 2, 100, 30);
@@ -86,6 +90,7 @@ public class SnakeGame extends JPanel implements ActionListener {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g.drawImage(backgroundImage, 0, 0, this);
         draw(g);
     }
 
@@ -249,7 +254,7 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame();
+        JFrame frame = new JFrame("SNAKE GAME");
         SnakeGame snakeGame = new SnakeGame();
         frame.add(snakeGame);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
