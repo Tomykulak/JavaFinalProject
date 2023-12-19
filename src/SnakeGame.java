@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.awt.geom.AffineTransform;
 import java.util.Random;
 
 public class SnakeGame extends JPanel implements ActionListener {
@@ -20,7 +21,7 @@ public class SnakeGame extends JPanel implements ActionListener {
     private JButton restartButton;
 
     private Image appleImage;
-    private Image snakeImage;
+    private Image snakeHeadImage;
 
     public SnakeGame() {
         random = new Random();
@@ -33,8 +34,8 @@ public class SnakeGame extends JPanel implements ActionListener {
         ImageIcon iid = new ImageIcon("images/apple.png");
         appleImage = iid.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
 
-        //ImageIcon iis = new ImageIcon("path_to_snake_image.png");
-        //snakeImage = iis.getImage();
+        ImageIcon iis = new ImageIcon("images/snakeHead.png");
+        snakeHeadImage = iis.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
 
         // Initialize and set up the restart button
         restartButton = new JButton("Restart");
@@ -75,7 +76,6 @@ public class SnakeGame extends JPanel implements ActionListener {
     public void spawnApple() {
         appleX = random.nextInt((int) (SIZE / DOT_SIZE)) * DOT_SIZE;
         appleY = random.nextInt((int) (SIZE / DOT_SIZE)) * DOT_SIZE;
-        System.out.println("New Apple: x=" + appleX + ", y=" + appleY);
     }
 
     public void paintComponent(Graphics g) {
@@ -84,13 +84,33 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
 
     public void draw(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+
         if (running) {
             g.drawImage(appleImage, appleX, appleY, this);
 
             for (int i = 0; i < bodyParts; i++) {
                 if (i == 0) {
-                    g.setColor(Color.green);
-                    g.fillRect(x[i], y[i], DOT_SIZE, DOT_SIZE);
+                    // Calculate the rotation angle based on the direction
+                    double rotationAngle = 0;
+                    switch (direction) {
+                        case 'U': rotationAngle = Math.toRadians(-90); break;
+                        case 'D': rotationAngle = Math.toRadians(90); break;
+                        case 'L': rotationAngle = Math.toRadians(180); break;
+                        case 'R': // No rotation needed
+                    }
+
+                    // Apply rotation
+                    AffineTransform old = g2d.getTransform();
+                    AffineTransform transform = new AffineTransform();
+                    transform.rotate(rotationAngle, x[i] + DOT_SIZE / 2.0, y[i] + DOT_SIZE / 2.0);
+                    g2d.setTransform(transform);
+
+                    // Draw the snake head
+                    g2d.drawImage(snakeHeadImage, x[i], y[i], this);
+
+                    // Reset the transformation
+                    g2d.setTransform(old);
                 } else {
                     g.setColor(new Color(45, 180, 0));
                     g.fillRect(x[i], y[i], DOT_SIZE, DOT_SIZE);
