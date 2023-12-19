@@ -213,7 +213,7 @@ public class SnakeGame extends JPanel implements ActionListener {
 
     public void gameOver(Graphics g) {
         // "Game Over" text setup
-        g.setColor(Color.green);
+        g.setColor(Color.red);
         g.setFont(new Font("Ink Free", Font.BOLD, 40));
         FontMetrics metrics40 = getFontMetrics(g.getFont());
         String gameOverText = "Game Over";
@@ -222,7 +222,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         g.drawString(gameOverText, xGameOverText, yGameOverText);
 
         // Display the final score
-        g.setColor(Color.red);
+        g.setColor(Color.green);
         g.setFont(new Font("Ink Free", Font.BOLD, 30));
         FontMetrics metrics30 = getFontMetrics(g.getFont());
         String scoreText = "Score: " + applesEaten;
