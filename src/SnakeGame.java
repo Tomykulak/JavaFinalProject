@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class SnakeGame extends JPanel implements ActionListener {
     private final int SIZE = 640;
-    private final int DOT_SIZE = 16;
+    private final int DOT_SIZE = 24;
     private final int ALL_DOTS = 400;
     private final int[] x = new int[ALL_DOTS];
     private final int[] y = new int[ALL_DOTS];
@@ -19,12 +19,23 @@ public class SnakeGame extends JPanel implements ActionListener {
     private Random random;
     private JButton restartButton;
 
+    private Image appleImage;
+    private Image snakeImage;
+
     public SnakeGame() {
         random = new Random();
         this.setPreferredSize(new Dimension(SIZE, SIZE));
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
+
+        //images
+        ImageIcon iid = new ImageIcon("images/apple.png");
+        appleImage = iid.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
+
+        //ImageIcon iis = new ImageIcon("path_to_snake_image.png");
+        //snakeImage = iis.getImage();
+
         // Initialize and set up the restart button
         restartButton = new JButton("Restart");
         restartButton.setBounds(SIZE / 2 - 50, SIZE / 2, 100, 30);
@@ -74,8 +85,7 @@ public class SnakeGame extends JPanel implements ActionListener {
 
     public void draw(Graphics g) {
         if (running) {
-            g.setColor(Color.red);
-            g.fillOval(appleX, appleY, DOT_SIZE, DOT_SIZE);
+            g.drawImage(appleImage, appleX, appleY, this);
 
             for (int i = 0; i < bodyParts; i++) {
                 if (i == 0) {
