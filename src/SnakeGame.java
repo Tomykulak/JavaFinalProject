@@ -46,7 +46,8 @@ public class SnakeGame extends JPanel implements ActionListener {
         ImageIcon iit = new ImageIcon("images/snakeTail.png");
         snakeTailImage = iit.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
 
-        ImageIcon ibg = new ImageIcon("images/sforestBackground.jpg");
+        //ImageIcon ibg = new ImageIcon("images/forestBackground.jpg");
+        ImageIcon ibg = new ImageIcon("images/forestBackground.jpg");
         backgroundImage = ibg.getImage().getScaledInstance(SIZE, SIZE, Image.SCALE_SMOOTH);
 
         restartButton = new JButton("Restart");
