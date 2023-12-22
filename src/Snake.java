@@ -5,6 +5,7 @@ public class Snake {
     private final int SIZE = 640;
     private int bodyParts = 3;
     private int applesEaten = 0;
+    private int maxApplesEaten = 0;
     private final Image snakeHeadImage;
     private final Image snakeBodyImage;
     private final Image snakeTailImage;
@@ -15,6 +16,7 @@ public class Snake {
         this.snakeTailImage = getSnakeTailImage();
         this.bodyParts = getBodyParts();
         this.applesEaten = getApplesEaten();
+        this.maxApplesEaten = getMaxApplesEaten();
     }
 
     public Image getSnakeHeadImage() {
@@ -34,6 +36,14 @@ public class Snake {
     }
     public int getApplesEaten() {
         return applesEaten;
+    }
+
+    public int getMaxApplesEaten() {
+        return maxApplesEaten;
+    }
+
+    public void setMaxApplesEaten(int maxApplesEaten) {
+        this.maxApplesEaten = maxApplesEaten;
     }
 
     public void setApplesEaten(int applesEaten) {
