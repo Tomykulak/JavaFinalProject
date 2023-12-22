@@ -8,8 +8,8 @@ public class SnakeGame extends JPanel implements ActionListener {
     private final int SIZE = 640;
     private final int[] x = new int[ALL_DOTS];
     private final int[] y = new int[ALL_DOTS];
-    private int bodyParts;
-    private int applesEaten;
+
+
     private int highestScore = 0; // New variable to store the highest score
 
     private char direction = 'R';
@@ -53,12 +53,10 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
 
     public void startGame() {
-        bodyParts = 3;
-        for (int i = 0; i < bodyParts; i++) {
+        for (int i = 0; i < snake.getBodyParts(); i++) {
             x[i] = 48 - i * DOT_SIZE;
             y[i] = 48;
         }
-        applesEaten = 0;
         direction = 'R';
         running = true;
 
@@ -85,7 +83,7 @@ public class SnakeGame extends JPanel implements ActionListener {
             // Draw apple
             g.drawImage(apple.getAppleImage(), apple.getAppleX(), apple.getAppleY(), this);
             // Draw Snake
-            for (int i = 0; i < bodyParts; i++) {
+            for (int i = 0; i < snake.getBodyParts(); i++) {
                 if (i == 0) {
                     // Draw head
                     g.setColor(Color.red); // Head color
@@ -111,7 +109,7 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
 
     public void move() {
-        for (int i = bodyParts; i > 0; i--) {
+        for (int i = snake.getBodyParts(); i > 0; i--) {
             x[i] = x[i - 1];
             y[i] = y[i - 1];
         }
@@ -134,10 +132,10 @@ public class SnakeGame extends JPanel implements ActionListener {
 
     public void checkApple() {
         if ((x[0] == apple.getAppleX()) && (y[0] == apple.getAppleY())) {
-            bodyParts++;
-            applesEaten++;
-            if (applesEaten > highestScore) {
-                highestScore = applesEaten;
+            snake.setBodyParts(snake.getBodyParts()+1);
+            snake.setApplesEaten(snake.getApplesEaten()+1);
+            if (snake.getApplesEaten() > highestScore) {
+                highestScore = snake.getApplesEaten();
             }
             apple.spawnApple(); // Reposition the apple
         }
@@ -145,7 +143,7 @@ public class SnakeGame extends JPanel implements ActionListener {
 
 
     public void checkCollisions() {
-        for (int i = bodyParts - 1; i > 0; i--) {
+        for (int i = snake.getBodyParts() - 1; i > 0; i--) {
             if ((x[0] == x[i]) && (y[0] == y[i])) {
                 running = false;
                 break;
@@ -176,7 +174,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         g.setColor(Color.green);
         g.setFont(new Font("Ink Free", Font.BOLD, 30));
         FontMetrics metrics30 = getFontMetrics(g.getFont());
-        String scoreText = "Score: " + applesEaten;
+        String scoreText = "Score: " + snake.getApplesEaten();
         int xScoreText = (SIZE - metrics30.stringWidth(scoreText)) / 2;
         int yScoreText = SIZE / 2 + 20; // Positioned in the middle
         g.drawString(scoreText, xScoreText, yScoreText);
@@ -188,6 +186,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         int yButton = SIZE / 2 + 70; // Positioned below the score
         restartButton.setBounds(xButton, yButton, buttonWidth, buttonHeight);
         restartButton.setVisible(true);
+        snake.setBodyParts(3);
     }
 
     @Override
