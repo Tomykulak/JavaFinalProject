@@ -3,7 +3,7 @@ import java.awt.event.KeyEvent;
 public class GameManager {
     private final int ALL_DOTS = 400;
     private final int DOT_SIZE = 24;
-    private final int SIZE = 640;
+    private final int SIZE = 900;
     private int[] x = new int[ALL_DOTS];
     private int[] y = new int[ALL_DOTS];
     private Snake snake;

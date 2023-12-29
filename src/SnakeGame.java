@@ -96,12 +96,19 @@ public class SnakeGame extends JPanel implements ActionListener {
         Graphics2D g2d = (Graphics2D) g;
         for (int i = 0; i < snake.getBodyParts(); i++) {
             if (i == 0) {
+                // Draw head
                 drawSnakeHead(g2d, gameManager.getX()[i], gameManager.getY()[i]);
+            } else if (i == snake.getBodyParts() - 1) {
+                // Draw tail for the last part
+                drawSnakeTail(g2d, gameManager.getX()[i], gameManager.getY()[i]);
             } else {
+                // Draw body for other parts
                 drawSnakeBody(g2d, gameManager.getX()[i], gameManager.getY()[i]);
             }
         }
     }
+
+
 
     private void drawSnakeHead(Graphics2D g2d, int x, int y) {
         AffineTransform transform = new AffineTransform();
@@ -116,6 +123,14 @@ public class SnakeGame extends JPanel implements ActionListener {
         g2d.drawImage(snake.getSnakeBodyImage(), x, y, this);
     }
 
+    private void drawSnakeTail(Graphics2D g2d, int x, int y) {
+        AffineTransform transform = new AffineTransform();
+        double rotationAngle = getTailRotationAngle();
+        transform.translate(x + gameManager.getDOT_SIZE() / 2.0, y + gameManager.getDOT_SIZE() / 2.0);
+        transform.rotate(rotationAngle);
+        transform.translate(-gameManager.getDOT_SIZE() / 2.0, -gameManager.getDOT_SIZE() / 2.0);
+        g2d.drawImage(snake.getSnakeTailImage(), transform, null);
+    }
 
 
     private void drawScores(Graphics g) {
@@ -134,6 +149,44 @@ public class SnakeGame extends JPanel implements ActionListener {
         }
         return 0.0;
     }
+
+    private double getVerticalTailRotationAngle(int tailY, int penultimateY) {
+        // Tail is moving up if the penultimate segment is below the tail
+        if (penultimateY > tailY) {
+            return Math.PI / 2; // Tail pointing up
+        } else {
+            return -Math.PI / 2; // Tail pointing down
+        }
+    }
+
+    private double getHorizontalTailRotationAngle(int tailX, int penultimateX) {
+        // Tail is moving right if the penultimate segment is to the left of the tail
+        if (penultimateX < tailX) {
+            return Math.PI; // Tail pointing right
+        } else {
+            return 0; // Tail pointing left
+        }
+    }
+
+    private double getTailRotationAngle() {
+        int tailIndex = snake.getBodyParts() - 1;
+        int penultimateIndex = tailIndex - 1;
+
+        int tailX = gameManager.getX()[tailIndex];
+        int tailY = gameManager.getY()[tailIndex];
+        int penultimateX = gameManager.getX()[penultimateIndex];
+        int penultimateY = gameManager.getY()[penultimateIndex];
+
+        if (penultimateX == tailX) {
+            // Vertical movement (up or down)
+            return getVerticalTailRotationAngle(tailY, penultimateY);
+        } else {
+            // Horizontal movement (left or right)
+            return getHorizontalTailRotationAngle(tailX, penultimateX);
+        }
+    }
+
+
 
     private void drawWelcomeScreen(Graphics g) {
         g.setColor(Color.white);
