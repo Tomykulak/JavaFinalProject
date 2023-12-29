@@ -22,7 +22,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
 
-        ImageIcon ibg = new ImageIcon("images/sforestBackground.jpg");
+        ImageIcon ibg = new ImageIcon("images/waterBackground.jpg");
         backgroundImage = ibg.getImage().getScaledInstance(gameManager.getSIZE(), gameManager.getSIZE(), Image.SCALE_SMOOTH);
 
         restartButton();
