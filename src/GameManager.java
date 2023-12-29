@@ -56,13 +56,12 @@ public class GameManager {
     }
 
     public void checkApple() {
-        if ((x[0] == apple.getAppleX()) && (y[0] == apple.getAppleY())) {
+        int range = apple.getBiggerAppleDotSize() / 2;
+        if (Math.abs(x[0] - apple.getAppleX()) < range && Math.abs(y[0] - apple.getAppleY()) < range) {
             snake.setBodyParts(snake.getBodyParts() + 1);
             snake.setApplesEaten(snake.getApplesEaten() + 1);
             apple.spawnApple();
-            if(snake.getMaxApplesEaten() < snake.getApplesEaten()){
-                snake.setMaxApplesEaten(snake.getApplesEaten());
-            }
+            // ... other logic ...
         }
     }
 

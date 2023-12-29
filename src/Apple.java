@@ -34,8 +34,19 @@ public class Apple {
     public Random getRandom() {
         return random;
     }
+
+    public int getBiggerAppleDotSize() {
+        return biggerAppleDotSize;
+    }
+
     public void spawnApple() {
-        appleX = random.nextInt((int) (gameManager.getSIZE() / gameManager.getDOT_SIZE())) * gameManager.getDOT_SIZE();
-        appleY = random.nextInt((int) (gameManager.getSIZE() / gameManager.getDOT_SIZE())) * gameManager.getDOT_SIZE();
+        int gridSize = gameManager.getSIZE() / gameManager.getDOT_SIZE();
+        appleX = random.nextInt(gridSize) * gameManager.getDOT_SIZE();
+        appleY = random.nextInt(gridSize) * gameManager.getDOT_SIZE();
+
+        // Adjust if the apple is too close to the edges
+        int maxPosition = gameManager.getSIZE() - biggerAppleDotSize;
+        appleX = Math.min(appleX, maxPosition);
+        appleY = Math.min(appleY, maxPosition);
     }
 }

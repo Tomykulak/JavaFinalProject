@@ -75,6 +75,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         g.drawImage(apple.getAppleImage(), apple.getAppleX(), apple.getAppleY(), this);
     }
 
+
     private void drawSnake(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         for (int i = 0; i < snake.getBodyParts(); i++) {
