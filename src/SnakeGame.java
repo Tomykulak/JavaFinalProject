@@ -3,20 +3,11 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import javax.swing.*;
 
-import static java.awt.Event.DOWN;
-import static java.awt.Event.UP;
-import static java.lang.Long.SIZE;
-import static javax.swing.SwingConstants.LEFT;
-import static javax.swing.SwingConstants.RIGHT;
-
 public class SnakeGame extends JPanel implements ActionListener {
     private GameManager gameManager;
     private Timer timer;
     private JButton restartButton;
     private Image backgroundImage;
-    private Image snakeHeadImage;
-    private Image snakeBodyImage;
-    private Image snakeTailImage;
 
     private Snake snake;
     private Apple apple;
@@ -33,15 +24,6 @@ public class SnakeGame extends JPanel implements ActionListener {
 
         ImageIcon ibg = new ImageIcon("images/sforestBackground.jpg");
         backgroundImage = ibg.getImage().getScaledInstance(gameManager.getSIZE(), gameManager.getSIZE(), Image.SCALE_SMOOTH);
-
-        ImageIcon iit = new ImageIcon("images/snakeTail.png");
-        snakeTailImage = iit.getImage().getScaledInstance(gameManager.getSIZE(), gameManager.getDOT_SIZE(), Image.SCALE_SMOOTH);
-
-        ImageIcon iib = new ImageIcon("images/snakeBody.png");
-        snakeBodyImage = iib.getImage().getScaledInstance(gameManager.getSIZE(), gameManager.getDOT_SIZE(), Image.SCALE_SMOOTH);
-
-        ImageIcon iis = new ImageIcon("images/snakeHead.png");
-        snakeHeadImage = iis.getImage().getScaledInstance(gameManager.getSIZE(), gameManager.getDOT_SIZE(), Image.SCALE_SMOOTH);
 
         restartButton();
         restartButton.setVisible(false);
@@ -81,56 +63,63 @@ public class SnakeGame extends JPanel implements ActionListener {
 
     private void draw(Graphics g) {
         if (gameManager.isRunning()) {
-            g.drawImage(apple.getAppleImage(), apple.getAppleX(), apple.getAppleY(), this);
-            // Draw Snake
-            Graphics2D g2d = (Graphics2D) g;
-
-
-            for (int i = 0; i < snake.getBodyParts(); i++) {
-                if (i == 0) {
-                    // Rotate the head image based on the direction
-                    AffineTransform transform = new AffineTransform();
-                    double rotationAngle = 0.0;
-
-                    switch (gameManager.getDirection()) {
-                        case 'U': // Up
-                            rotationAngle = -Math.PI / 2; // Corrected angle for up
-                            break;
-                        case 'D': // Down
-                            rotationAngle = Math.PI / 2; // Corrected angle for down
-                            break;
-                        case 'L': // Left
-                            rotationAngle = Math.PI; // Angle for left
-                            break;
-                        case 'R': // Right
-                            // No rotation needed for right
-                            break;
-                    }
-
-                    int headX = gameManager.getX()[0];
-                    int headY = gameManager.getY()[0];
-
-                    transform.translate(headX + gameManager.getDOT_SIZE() / 2.0, headY + gameManager.getDOT_SIZE() / 2.0);
-                    transform.rotate(rotationAngle);
-                    transform.translate(-gameManager.getDOT_SIZE() / 2.0, -gameManager.getDOT_SIZE() / 2.0);
-
-                    g2d.drawImage(snake.getSnakeHeadImage(), transform, null);
-                } else {
-                    // Draw body
-                    g2d.drawImage(snake.getSnakeBodyImage(), gameManager.getX()[i], gameManager.getY()[i], this);
-                }
-            }
-            // Draw text
-            g.setColor(Color.white);
-            g.setFont(new Font("Ink Free", Font.BOLD, 30));
-            // Draw the highest score
-            g.drawString("High Score: " + snake.getMaxApplesEaten(), 10, 30);
-            // Draw the current score
-            g.drawString("Score: " + snake.getApplesEaten(), 10, 60);
+            drawApple(g);
+            drawSnake(g);
+            drawScores(g);
         } else {
             gameOver(g);
         }
     }
+
+    private void drawApple(Graphics g) {
+        g.drawImage(apple.getAppleImage(), apple.getAppleX(), apple.getAppleY(), this);
+    }
+
+    private void drawSnake(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        for (int i = 0; i < snake.getBodyParts(); i++) {
+            if (i == 0) {
+                drawSnakeHead(g2d, gameManager.getX()[i], gameManager.getY()[i]);
+            } else {
+                drawSnakeBody(g2d, gameManager.getX()[i], gameManager.getY()[i]);
+            }
+        }
+    }
+
+    private void drawSnakeHead(Graphics2D g2d, int x, int y) {
+        AffineTransform transform = new AffineTransform();
+        double rotationAngle = getRotationAngle();
+
+        transform.translate(x + gameManager.getDOT_SIZE() / 2.0, y + gameManager.getDOT_SIZE() / 2.0);
+        transform.rotate(rotationAngle);
+        transform.translate(-gameManager.getDOT_SIZE() / 2.0, -gameManager.getDOT_SIZE() / 2.0);
+
+        g2d.drawImage(snake.getSnakeHeadImage(), transform, null);
+    }
+
+    private void drawSnakeBody(Graphics2D g2d, int x, int y) {
+        g2d.drawImage(snake.getSnakeBodyImage(), x, y, this);
+    }
+
+    private void drawScores(Graphics g) {
+        g.setColor(Color.white);
+        g.setFont(new Font("Ink Free", Font.BOLD, 30));
+        g.drawString("High Score: " + snake.getMaxApplesEaten(), 10, 30);
+        g.drawString("Score: " + snake.getApplesEaten(), 10, 60);
+    }
+
+
+    private double getRotationAngle() {
+        switch (gameManager.getDirection()) {
+            case 'U': return -Math.PI / 2;
+            case 'D': return Math.PI / 2;
+            case 'L': return Math.PI;
+            case 'R': return 0.0;
+        }
+        return 0.0;
+    }
+
+
 
     public void gameOver(Graphics g) {
         // "Game Over" text setup
