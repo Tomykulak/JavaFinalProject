@@ -3,7 +3,7 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import javax.swing.*;
 
-public class SnakeGame extends JPanel implements ActionListener {
+public class SnakeGraphic extends JPanel implements ActionListener {
     private GameManager gameManager;
     private Timer timer;
     private JButton restartButton;
@@ -12,7 +12,7 @@ public class SnakeGame extends JPanel implements ActionListener {
     private Snake snake;
     private Apple apple;
 
-    public SnakeGame() {
+    public SnakeGraphic() {
         snake = new Snake();
         apple = new Apple();
         gameManager = new GameManager(snake, apple);
@@ -245,16 +245,5 @@ public class SnakeGame extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
             gameManager.setDirectionBasedOnKey(e.getKeyCode());
         }
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Snake Game");
-        SnakeGame snakeGame = new SnakeGame();
-        frame.add(snakeGame);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.pack();
-        frame.setVisible(true);
-        frame.setLocationRelativeTo(null);
     }
 }
