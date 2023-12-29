@@ -1,22 +1,33 @@
+import javax.swing.*;
 import java.awt.*;
 
 public class Snake {
+    private final int ALL_DOTS = 400;
     private final int DOT_SIZE = 24;
     private final int SIZE = 640;
     private int bodyParts = 3;
     private int applesEaten = 0;
     private int maxApplesEaten = 0;
-    private final Image snakeHeadImage;
-    private final Image snakeBodyImage;
-    private final Image snakeTailImage;
+    private Image snakeHeadImage;
+    private Image snakeBodyImage;
+    private Image snakeTailImage;
 
     public Snake() {
-        this.snakeHeadImage = getSnakeHeadImage();
-        this.snakeBodyImage = getSnakeBodyImage();
-        this.snakeTailImage = getSnakeTailImage();
-        this.bodyParts = getBodyParts();
-        this.applesEaten = getApplesEaten();
-        this.maxApplesEaten = getMaxApplesEaten();
+        loadImages();
+        this.bodyParts = 3;
+        this.applesEaten = 0;
+        this.maxApplesEaten = 0;
+    }
+
+    private void loadImages() {
+        ImageIcon iis = new ImageIcon("images/snakeHead.png");
+        snakeHeadImage = iis.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
+
+        ImageIcon iib = new ImageIcon("images/snakeBody.png");
+        snakeBodyImage = iib.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
+
+        ImageIcon iit = new ImageIcon("images/snakeTail.png");
+        snakeTailImage = iit.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
     }
 
     public Image getSnakeHeadImage() {

@@ -3,19 +3,21 @@ import java.awt.*;
 import java.util.Random;
 
 public class Apple {
-    private final int DOT_SIZE = 24;
-    private final int SIZE = 640;
+    private GameManager gameManager;
+    private int biggerAppleDotSize;
     private int appleX;
     private int appleY;
     private Image appleImage;
     private Random random;
 
     public Apple() {
+        gameManager = new GameManager();
         this.random = new Random();
+        biggerAppleDotSize = gameManager.getDOT_SIZE()+6;
         ImageIcon iid = new ImageIcon("images/apple.png");
-        this.appleX = random.nextInt((int) (SIZE / DOT_SIZE)) * DOT_SIZE;
-        this.appleY = random.nextInt((int) (SIZE / DOT_SIZE)) * DOT_SIZE;
-        this.appleImage = iid.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
+        this.appleX = random.nextInt((int) (gameManager.getSIZE() / gameManager.getDOT_SIZE())) * gameManager.getDOT_SIZE();
+        this.appleY = random.nextInt((int) (gameManager.getSIZE() / gameManager.getDOT_SIZE())) * gameManager.getDOT_SIZE();
+        this.appleImage = iid.getImage().getScaledInstance(biggerAppleDotSize, biggerAppleDotSize, Image.SCALE_SMOOTH);
     }
     public int getAppleX() {
         return appleX;
@@ -33,7 +35,7 @@ public class Apple {
         return random;
     }
     public void spawnApple() {
-        appleX = random.nextInt((int) (SIZE / DOT_SIZE)) * DOT_SIZE;
-        appleY = random.nextInt((int) (SIZE / DOT_SIZE)) * DOT_SIZE;
+        appleX = random.nextInt((int) (gameManager.getSIZE() / gameManager.getDOT_SIZE())) * gameManager.getDOT_SIZE();
+        appleY = random.nextInt((int) (gameManager.getSIZE() / gameManager.getDOT_SIZE())) * gameManager.getDOT_SIZE();
     }
 }

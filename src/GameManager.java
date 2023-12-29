@@ -19,6 +19,9 @@ public class GameManager {
         initializeGame();
     }
 
+    public GameManager(){
+    }
+
     public void initializeGame() {
         snake.setBodyParts(3);
         snake.setApplesEaten(0);
@@ -120,5 +123,8 @@ public class GameManager {
 
     public int[] getY() {
         return y;
+    }
+    public char getDirection() {
+        return direction;
     }
 }
