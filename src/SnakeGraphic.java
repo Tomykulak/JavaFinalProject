@@ -64,7 +64,7 @@ public class SnakeGraphic extends JPanel implements ActionListener {
         if (timer != null) {
             timer.stop();
         }
-        timer = new Timer(150, this);
+        timer = new Timer(75, this);
         timer.start();
         startButton.setVisible(false);
         restartButton.setVisible(false);
