@@ -7,8 +7,8 @@ public class SnakeGame extends JPanel implements ActionListener {
     private GameManager gameManager;
     private Timer timer;
     private JButton restartButton;
+    private JButton startButton;
     private Image backgroundImage;
-
     private Snake snake;
     private Apple apple;
 
@@ -25,11 +25,26 @@ public class SnakeGame extends JPanel implements ActionListener {
         ImageIcon ibg = new ImageIcon("images/waterBackground.jpg");
         backgroundImage = ibg.getImage().getScaledInstance(gameManager.getSIZE(), gameManager.getSIZE(), Image.SCALE_SMOOTH);
 
+        // Calculate center position for the button
+        int buttonWidth = 150;
+        int buttonHeight = 40;
+        int xButton = gameManager.getSIZE() / 2 - buttonWidth / 2;
+        int yButton = gameManager.getSIZE() / 2 - buttonHeight / 2 + 50;
+        startButton = new JButton("Start Game");
+        startButton.setBounds(xButton, yButton, buttonWidth, buttonHeight);
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startGame();
+            }
+        });
+        add(startButton);
+
         restartButton();
         restartButton.setVisible(false);
         add(restartButton);
 
-        startGame();
+        gameManager.setRunning(false);
     }
 
     private void restartButton() {
@@ -51,7 +66,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         }
         timer = new Timer(150, this);
         timer.start();
-
+        startButton.setVisible(false);
         restartButton.setVisible(false);
     }
 
@@ -66,6 +81,8 @@ public class SnakeGame extends JPanel implements ActionListener {
             drawApple(g);
             drawSnake(g);
             drawScores(g);
+        } else if (!gameManager.hasStarted()) {
+            drawWelcomeScreen(g);
         } else {
             gameOver(g);
         }
@@ -74,7 +91,6 @@ public class SnakeGame extends JPanel implements ActionListener {
     private void drawApple(Graphics g) {
         g.drawImage(apple.getAppleImage(), apple.getAppleX(), apple.getAppleY(), this);
     }
-
 
     private void drawSnake(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
@@ -90,11 +106,9 @@ public class SnakeGame extends JPanel implements ActionListener {
     private void drawSnakeHead(Graphics2D g2d, int x, int y) {
         AffineTransform transform = new AffineTransform();
         double rotationAngle = getRotationAngle();
-
         transform.translate(x + gameManager.getDOT_SIZE() / 2.0, y + gameManager.getDOT_SIZE() / 2.0);
         transform.rotate(rotationAngle);
         transform.translate(-gameManager.getDOT_SIZE() / 2.0, -gameManager.getDOT_SIZE() / 2.0);
-
         g2d.drawImage(snake.getSnakeHeadImage(), transform, null);
     }
 
@@ -102,13 +116,14 @@ public class SnakeGame extends JPanel implements ActionListener {
         g2d.drawImage(snake.getSnakeBodyImage(), x, y, this);
     }
 
+
+
     private void drawScores(Graphics g) {
         g.setColor(Color.white);
         g.setFont(new Font("Ink Free", Font.BOLD, 30));
         g.drawString("High Score: " + snake.getMaxApplesEaten(), 10, 30);
         g.drawString("Score: " + snake.getApplesEaten(), 10, 60);
     }
-
 
     private double getRotationAngle() {
         switch (gameManager.getDirection()) {
@@ -120,32 +135,43 @@ public class SnakeGame extends JPanel implements ActionListener {
         return 0.0;
     }
 
+    private void drawWelcomeScreen(Graphics g) {
+        g.setColor(Color.white);
+        g.setFont(new Font("Ink Free", Font.BOLD, 40));
+        FontMetrics metrics = getFontMetrics(g.getFont());
+        String welcomeText = "Welcome to Snake Game";
+        int xText = (gameManager.getSIZE() - metrics.stringWidth(welcomeText)) / 2;
+        int yText = gameManager.getSIZE() / 2;
+        g.drawString(welcomeText, xText, yText);
+
+        // Position the start button below the welcome text
+        int buttonWidth = 150;
+        int buttonHeight = 40;
+        int xButton = gameManager.getSIZE() / 2 - buttonWidth / 2;
+        int yButton = yText + metrics.getHeight(); // Place the button right below the text
+        startButton.setBounds(xButton, yButton, buttonWidth, buttonHeight);
+    }
 
 
     public void gameOver(Graphics g) {
-        // "Game Over" text setup
         g.setColor(Color.red);
         g.setFont(new Font("Ink Free", Font.BOLD, 40));
         FontMetrics metrics40 = getFontMetrics(g.getFont());
         String gameOverText = "Game Over";
         int xGameOverText = (gameManager.getSIZE() - metrics40.stringWidth(gameOverText)) / 2;
-        int yGameOverText = gameManager.getSIZE() / 2 - 50; // Positioned slightly above the middle
+        int yGameOverText = gameManager.getSIZE() / 2 - 50;
         g.drawString(gameOverText, xGameOverText, yGameOverText);
-
-        // Display the final score
         g.setColor(Color.green);
         g.setFont(new Font("Ink Free", Font.BOLD, 30));
         FontMetrics metrics30 = getFontMetrics(g.getFont());
         String scoreText = "Score: " + snake.getApplesEaten();
         int xScoreText = (gameManager.getSIZE() - metrics30.stringWidth(scoreText)) / 2;
-        int yScoreText = gameManager.getSIZE() / 2 + 20; // Positioned in the middle
+        int yScoreText = gameManager.getSIZE() / 2 + 20;
         g.drawString(scoreText, xScoreText, yScoreText);
-
-        // Positioning the restart button
         int buttonWidth = 100;
         int buttonHeight = 30;
         int xButton = (gameManager.getSIZE() - buttonWidth) / 2;
-        int yButton = gameManager.getSIZE() / 2 + 70; // Positioned below the score
+        int yButton = gameManager.getSIZE() / 2 + 70;
         restartButton.setBounds(xButton, yButton, buttonWidth, buttonHeight);
         restartButton.setVisible(true);
     }
@@ -155,6 +181,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         if (gameManager.isRunning()) {
             gameManager.move();
             gameManager.checkApple();
+            snake.updateMaxApplesEaten();
             gameManager.checkCollisions();
         }
         repaint();

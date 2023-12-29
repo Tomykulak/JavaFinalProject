@@ -30,6 +30,12 @@ public class Snake {
         snakeTailImage = iit.getImage().getScaledInstance(DOT_SIZE, DOT_SIZE, Image.SCALE_SMOOTH);
     }
 
+    public void updateMaxApplesEaten() {
+        if (applesEaten > maxApplesEaten) {
+            maxApplesEaten = applesEaten;
+        }
+    }
+
     public Image getSnakeHeadImage() {
         return snakeHeadImage;
     }
@@ -52,11 +58,6 @@ public class Snake {
     public int getMaxApplesEaten() {
         return maxApplesEaten;
     }
-
-    public void setMaxApplesEaten(int maxApplesEaten) {
-        this.maxApplesEaten = maxApplesEaten;
-    }
-
     public void setApplesEaten(int applesEaten) {
         this.applesEaten = applesEaten;
     }

@@ -6,12 +6,23 @@ public class GameManager {
     private final int SIZE = 640;
     private int[] x = new int[ALL_DOTS];
     private int[] y = new int[ALL_DOTS];
-
     private Snake snake;
     private Apple apple;
 
     private char direction = 'R';
     private boolean running = false;
+    private boolean hasStarted = false;
+
+    public void setRunning(boolean running) {
+        this.running = running;
+        if (!running) {
+            hasStarted = false;  // Reset when the game stops
+        }
+    }
+
+    public boolean hasStarted() {
+        return hasStarted;
+    }
 
     public GameManager(Snake snake, Apple apple) {
         this.snake = snake;
@@ -31,6 +42,7 @@ public class GameManager {
         }
         direction = 'R';
         running = true;
+        hasStarted = true;
     }
 
     public void move() {
