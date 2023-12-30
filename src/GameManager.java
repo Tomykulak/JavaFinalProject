@@ -8,7 +8,6 @@ public class GameManager {
     private int[] y = new int[ALL_DOTS];
     private Snake snake;
     private Apple apple;
-
     private char direction = 'R';
     private boolean running = false;
     private boolean hasStarted = false;
@@ -28,11 +27,11 @@ public class GameManager {
     public GameManager(Snake snake, Apple apple) {
         this.snake = snake;
         this.apple = apple;
+        soundManager = new SoundManager();
         initializeGame();
-        soundManager = new SoundManager(); // Initialize the SoundManager
     }
 
-    public GameManager(){
+    public GameManager() {
     }
 
     public void initializeGame() {
@@ -45,6 +44,7 @@ public class GameManager {
         direction = 'R';
         running = true;
         hasStarted = true;
+        soundManager.playBackgroundMusic(); // Start background music when the game initializes
     }
 
     public void move() {
@@ -75,8 +75,7 @@ public class GameManager {
             snake.setBodyParts(snake.getBodyParts() + 1);
             snake.setApplesEaten(snake.getApplesEaten() + 1);
             apple.spawnApple();
-            // Play the eat sound using the SoundManager
-            soundManager.playEatSound();
+            soundManager.playEatSound(); // Play the eat sound using the SoundManager
         }
     }
 
@@ -90,6 +89,10 @@ public class GameManager {
 
         if (x[0] < 0 || x[0] >= SIZE || y[0] < 0 || y[0] >= SIZE) {
             running = false;
+        }
+
+        if (!running) {
+            soundManager.stopBackgroundMusic(); // Stop the background music on game over
         }
     }
 
@@ -138,6 +141,7 @@ public class GameManager {
     public int[] getY() {
         return y;
     }
+
     public char getDirection() {
         return direction;
     }
