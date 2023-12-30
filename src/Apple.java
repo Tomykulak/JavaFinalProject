@@ -3,12 +3,12 @@ import java.awt.*;
 import java.util.Random;
 
 public class Apple {
-    private GameManager gameManager;
-    private int biggerAppleDotSize;
+    private final GameManager gameManager;
+    private final int biggerAppleDotSize;
     private int appleX;
     private int appleY;
-    private Image appleImage;
-    private Random random;
+    private final Image appleImage;
+    private final Random random;
 
     public Apple() {
         gameManager = new GameManager();
