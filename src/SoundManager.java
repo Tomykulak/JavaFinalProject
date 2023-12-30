@@ -39,6 +39,9 @@ public class SoundManager {
 
     public void playBackgroundMusic() {
         if (backgroundMusicClip != null && !backgroundMusicClip.isRunning()) {
+            FloatControl gainControl = (FloatControl) backgroundMusicClip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(-5f); // Adjust volume (default is -80f, lower values are louder)
+
             backgroundMusicClip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
@@ -60,5 +63,11 @@ public class SoundManager {
     public void playGameOverSound(){
         gameOverSoundClip.setFramePosition(0);
         gameOverSoundClip.start();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        playBackgroundMusic();
     }
 }
