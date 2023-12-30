@@ -2,9 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Snake {
-    private final int ALL_DOTS = 400;
     private final int DOT_SIZE = 24;
-    private final int SIZE = 640;
     private int bodyParts = 3;
     private int applesEaten = 0;
     private int maxApplesEaten = 0;

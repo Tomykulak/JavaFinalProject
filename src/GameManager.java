@@ -3,15 +3,16 @@ import java.awt.event.KeyEvent;
 public class GameManager {
     private final int ALL_DOTS = 400;
     private final int DOT_SIZE = 24;
-    private final int SIZE = 900;
-    private int[] x = new int[ALL_DOTS];
-    private int[] y = new int[ALL_DOTS];
+    private final int SIZE = 840;
+    private final int[] x = new int[ALL_DOTS];
+    private final int[] y = new int[ALL_DOTS];
     private Snake snake;
     private Apple apple;
     private char direction = 'R';
     private boolean running = false;
     private boolean hasStarted = false;
     private SoundManager soundManager;
+    private boolean directionChangeAllowed = true; // Added flag to control direction changes
 
     public void setRunning(boolean running) {
         this.running = running;
@@ -67,6 +68,8 @@ public class GameManager {
                 x[0] += DOT_SIZE;
                 break;
         }
+
+        directionChangeAllowed = true; // Reset the direction change flag
     }
 
     public void checkApple() {
@@ -101,27 +104,33 @@ public class GameManager {
     }
 
     public void setDirectionBasedOnKey(int keyCode) {
-        switch (keyCode) {
-            case KeyEvent.VK_LEFT:
-                if (direction != 'R') {
-                    direction = 'L';
+        if (directionChangeAllowed) {
+            switch (keyCode) {
+                case KeyEvent.VK_LEFT -> {
+                    if (direction != 'R') {
+                        direction = 'L';
+                        directionChangeAllowed = false;
+                    }
                 }
-                break;
-            case KeyEvent.VK_RIGHT:
-                if (direction != 'L') {
-                    direction = 'R';
+                case KeyEvent.VK_RIGHT -> {
+                    if (direction != 'L') {
+                        direction = 'R';
+                        directionChangeAllowed = false;
+                    }
                 }
-                break;
-            case KeyEvent.VK_UP:
-                if (direction != 'D') {
-                    direction = 'U';
+                case KeyEvent.VK_UP -> {
+                    if (direction != 'D') {
+                        direction = 'U';
+                        directionChangeAllowed = false;
+                    }
                 }
-                break;
-            case KeyEvent.VK_DOWN:
-                if (direction != 'U') {
-                    direction = 'D';
+                case KeyEvent.VK_DOWN -> {
+                    if (direction != 'U') {
+                        direction = 'D';
+                        directionChangeAllowed = false;
+                    }
                 }
-                break;
+            }
         }
     }
 
