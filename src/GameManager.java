@@ -36,6 +36,7 @@ public class GameManager {
     }
 
     public void initializeGame() {
+        // Sets bodyparts of the snake
         snake.setBodyParts(3);
         snake.setApplesEaten(0);
         for (int i = 0; i < snake.getBodyParts(); i++) {

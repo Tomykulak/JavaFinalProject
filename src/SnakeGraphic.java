@@ -14,6 +14,9 @@ public class SnakeGraphic extends JPanel implements ActionListener {
     private final Image backgroundImage;
     private final Snake snake;
     private final Apple apple;
+    private boolean keyHeldDown = false; // Added flag to track if a key is held down
+    private final int delay = 75; // Initial delay value (adjust as needed)
+
     public SnakeGraphic() {
         snake = new Snake();
         apple = new Apple();
@@ -66,7 +69,7 @@ public class SnakeGraphic extends JPanel implements ActionListener {
         if (timer != null) {
             timer.stop();
         }
-        timer = new Timer(75, this);
+        timer = new Timer(delay, this);
         timer.start();
         startButton.setVisible(false);
         restartButton.setVisible(false);
@@ -243,9 +246,26 @@ public class SnakeGraphic extends JPanel implements ActionListener {
     }
 
     public class MyKeyAdapter extends KeyAdapter {
+        private long lastKeyPressTime = 0;
+
         @Override
         public void keyPressed(KeyEvent e) {
             gameManager.setDirectionBasedOnKey(e.getKeyCode());
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastKeyPressTime < 300) {
+                keyHeldDown = true; // If key is pressed again within 300 milliseconds, consider it as holding
+                // Speed multiplier when a key is held down
+                int speedMultiplier = 2;
+                timer.setDelay(delay / speedMultiplier); // Increase the game speed
+            }
+            lastKeyPressTime = currentTime;
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            keyHeldDown = false;
+            timer.setDelay(delay); // Restore the original game speed
         }
     }
+
 }
