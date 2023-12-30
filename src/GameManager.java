@@ -12,6 +12,7 @@ public class GameManager {
     private char direction = 'R';
     private boolean running = false;
     private boolean hasStarted = false;
+    private SoundManager soundManager;
 
     public void setRunning(boolean running) {
         this.running = running;
@@ -28,6 +29,7 @@ public class GameManager {
         this.snake = snake;
         this.apple = apple;
         initializeGame();
+        soundManager = new SoundManager(); // Initialize the SoundManager
     }
 
     public GameManager(){
@@ -73,7 +75,8 @@ public class GameManager {
             snake.setBodyParts(snake.getBodyParts() + 1);
             snake.setApplesEaten(snake.getApplesEaten() + 1);
             apple.spawnApple();
-            // ... other logic ...
+            // Play the eat sound using the SoundManager
+            soundManager.playEatSound();
         }
     }
 

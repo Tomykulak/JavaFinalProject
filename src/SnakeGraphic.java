@@ -1,17 +1,19 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.AffineTransform;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 
 public class SnakeGraphic extends JPanel implements ActionListener {
-    private GameManager gameManager;
+    private final GameManager gameManager;
     private Timer timer;
     private JButton restartButton;
-    private JButton startButton;
-    private Image backgroundImage;
-    private Snake snake;
-    private Apple apple;
-
+    private final JButton startButton;
+    private final Image backgroundImage;
+    private final Snake snake;
+    private final Apple apple;
     public SnakeGraphic() {
         snake = new Snake();
         apple = new Apple();
