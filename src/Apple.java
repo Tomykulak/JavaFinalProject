@@ -14,7 +14,7 @@ public class Apple {
         gameManager = new GameManager();
         this.random = new Random();
         biggerAppleDotSize = gameManager.getDOT_SIZE()+6;
-        ImageIcon iid = new ImageIcon("images/apple.png");
+        ImageIcon iid = new ImageIcon("images/jahoda.png");
         this.appleX = random.nextInt((int) (gameManager.getSIZE() / gameManager.getDOT_SIZE())) * gameManager.getDOT_SIZE();
         this.appleY = random.nextInt((int) (gameManager.getSIZE() / gameManager.getDOT_SIZE())) * gameManager.getDOT_SIZE();
         this.appleImage = iid.getImage().getScaledInstance(biggerAppleDotSize, biggerAppleDotSize, Image.SCALE_SMOOTH);

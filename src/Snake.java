@@ -16,6 +16,10 @@ public class Snake {
         this.applesEaten = 0;
         this.maxApplesEaten = 0;
     }
+    public Snake(int applesEaten, int maxApplesEaten) {
+        this.applesEaten = applesEaten;
+        this.maxApplesEaten = maxApplesEaten;
+    }
 
     private void loadImages() {
         ImageIcon iis = new ImageIcon("images/snakeHead.png");
