@@ -9,5 +9,4 @@ class SnakeTest {
         snake.updateMaxApplesEaten();
         assertEquals(snake.getMaxApplesEaten(), 3);
     }
-
 }

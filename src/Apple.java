@@ -41,12 +41,16 @@ public class Apple {
 
     public void spawnApple() {
         int gridSize = gameManager.getSIZE() / gameManager.getDOT_SIZE();
-        appleX = random.nextInt(gridSize) * gameManager.getDOT_SIZE();
-        appleY = random.nextInt(gridSize) * gameManager.getDOT_SIZE();
+        int maxPosition = gridSize - 1; // Maximum position within the grid
 
-        // Adjust if the apple is too close to the edges
-        int maxPosition = gameManager.getSIZE() - biggerAppleDotSize;
-        appleX = Math.min(appleX, maxPosition);
-        appleY = Math.min(appleY, maxPosition);
+        // Generate random coordinates within the grid
+        appleX = random.nextInt(maxPosition) * gameManager.getDOT_SIZE();
+        appleY = random.nextInt(maxPosition) * gameManager.getDOT_SIZE();
+
+        // Ensure the apple remains within the grid boundaries, considering its size
+        int maxApplePosition = maxPosition * gameManager.getDOT_SIZE();
+        appleX = Math.min(appleX, maxApplePosition);
+        appleY = Math.min(appleY, maxApplePosition);
     }
+
 }

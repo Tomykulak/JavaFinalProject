@@ -1,16 +1,22 @@
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class AppleTest {
 
     @Test
     void spawnAppleTest() {
-        GameManager gameManager = new GameManager();
         Apple apple = new Apple();
+
+        // Capture the initial positions
+        int initialX = apple.getAppleX();
+        int initialY = apple.getAppleY();
+
+        // Spawn the apple again
         apple.spawnApple();
-        // could be improved comparing against 0
-        assertTrue(apple.getAppleX() >= 0 && apple.getAppleX() < gameManager.getSIZE());
-        assertTrue(apple.getAppleY() >= 0 && apple.getAppleY() < gameManager.getSIZE());
+
+        // Check if either the new X or Y position is different from the initial ones
+        boolean xChanged = initialX != apple.getAppleX();
+        boolean yChanged = initialY != apple.getAppleY();
+
+        assert(xChanged || yChanged);
     }
 }

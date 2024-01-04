@@ -7,7 +7,7 @@ public class GameManager {
     private final int[] x = new int[ALL_DOTS];
     private final int[] y = new int[ALL_DOTS];
     private Snake snake;
-    private Apple apple;
+    Apple apple;
     private char direction = 'R';
     private boolean running = false;
     private boolean hasStarted = false;
