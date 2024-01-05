@@ -13,7 +13,7 @@ class AppleTest {
         // Spawn the apple again
         apple.spawnApple();
 
-        // Check if either the new X or Y position is different from the initial ones
+        // Check if either the new X or Y position is different
         boolean xChanged = initialX != apple.getAppleX();
         boolean yChanged = initialY != apple.getAppleY();
 

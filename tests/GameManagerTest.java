@@ -25,7 +25,7 @@ class GameManagerTest {
         gameManager.checkCollisions();
         assertFalse(gameManager.isRunning());
 
-        // Test collision with the snake's own body
+        // Test collision with the snake own body
         snake.setBodyParts(4);
         gameManager.getX()[0] = 48;
         gameManager.getY()[0] = 48;
